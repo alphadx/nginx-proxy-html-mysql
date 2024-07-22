@@ -1,0 +1,22 @@
+version: '3'
+services:
+  nginx:
+    image: nginx:latest
+    ports:
+      - "8080:80"
+      - "30006:3306"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - apache
+  apache:
+    build:
+      context: .
+      dockerfile: Dockerfile.apache
+    volumes:
+      - ./php:/var/www/html
+  mysql:
+    image: mysql:8.0.19
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+

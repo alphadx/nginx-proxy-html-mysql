@@ -1,0 +1,19 @@
+# Use PHP 8.1/8.2 Apache image as the base
+FROM php:8.2-apache
+
+# Install necessary PHP extensions
+RUN docker-php-ext-install mysqli pdo pdo_mysql
+
+# Set document root
+ENV APACHE_DOCUMENT_ROOT /var/www/html/public
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
+RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+
+# Enable Apache modules
+RUN a2enmod rewrite
+
+# Copy the Apache virtual host file
+#COPY apache-config.conf /etc/apache2/sites-available/000-default.conf
+
+# Enable Apache virtual host
+#RUN a2ensite 000-default.conf
